@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Community Hero — Hyperlocal Problem Solver</title>
+    <meta name="description" content="Citizen platform to report, track and resolve civic issues in Meerut Ward 12" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css" />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    <div class="shell">
+
+        <!-- TOP BAR -->
+        <header class="topbar">
+            <div class="logo">
+                <div class="logo-icon"><i class="ti ti-map-pin"></i></div>
+                <div>
+                    <div class="logo-name">Community Hero</div>
+                    <div class="logo-sub">Meerut · Ward 12</div>
+                </div>
+            </div>
+            <div class="topbar-right">
+                <div class="xp-pill"><i class="ti ti-bolt"></i> <span id="xp-display">1,240 XP · Level 7</span></div>
+                <button class="notif-btn" id="notif-btn" aria-label="Notifications">
+                    <i class="ti ti-bell"></i>
+                    <div class="notif-dot"></div>
+                </button>
+                <button class="btn btn-green" id="open-report-btn">
+                    <i class="ti ti-plus"></i> Report Issue
+                </button>
+            </div>
+        </header>
+
+        <!-- NAV TABS -->
+        <nav class="nav">
+            <button class="ntab on" data-page="dash"><i class="ti ti-layout-dashboard"></i> Dashboard</button>
+            <button class="ntab" data-page="map"><i class="ti ti-map-2"></i> Map View</button>
+            <button class="ntab" data-page="impact"><i class="ti ti-chart-bar"></i> Impact</button>
+            <button class="ntab" data-page="lb"><i class="ti ti-trophy"></i> Leaderboard</button>
+        </nav>
+
+        <!-- ═══════════════════════════════════════
+       PAGE 1: DASHBOARD
+  ═══════════════════════════════════════ -->
+        <div id="page-dash" class="page on">
+            <div class="dash-grid">
+
+                <!-- Sidebar -->
+                <aside class="sidebar">
+                    <div class="slabel">Categories</div>
+                    <button class="sitem on" data-cat="all"><span class="sitem-l"><i class="ti ti-layout-list"></i>All
+                            Issues</span><span class="cnt" id="cnt-all">6</span></button>
+                    <button class="sitem" data-cat="roads"><span class="sitem-l"><i
+                                class="ti ti-road"></i>Roads</span><span class="cnt">2</span></button>
+                    <button class="sitem" data-cat="water"><span class="sitem-l"><i
+                                class="ti ti-droplet"></i>Water</span><span class="cnt">1</span></button>
+                    <button class="sitem" data-cat="light"><span class="sitem-l"><i
+                                class="ti ti-bulb"></i>Lighting</span><span class="cnt">1</span></button>
+                    <button class="sitem" data-cat="waste"><span class="sitem-l"><i
+                                class="ti ti-trash"></i>Waste</span><span class="cnt">2</span></button>
+                    <div class="slabel">Status</div>
+                    <button class="sitem" data-stat="open"><span class="sitem-l"><i
+                                class="ti ti-alert-circle"></i>Open</span><span class="cnt">3</span></button>
+                    <button class="sitem" data-stat="in-progress"><span class="sitem-l"><i class="ti ti-clock"></i>In
+                            Progress</span><span class="cnt">2</span></button>
+                    <button class="sitem" data-stat="resolved"><span class="sitem-l"><i
+                                class="ti ti-check"></i>Resolved</span><span class="cnt">1</span></button>
+                </aside>
+
+                <!-- Feed -->
+                <section class="feed">
+                    <div class="feed-top">
+                        <h2 class="feed-title" id="feed-title">All Issues in Ward 12</h2>
+                        <div class="filters">
+                            <button class="fpill on" data-filter="all">All</button>
+                            <button class="fpill" data-filter="near">Nearby</button>
+                            <button class="fpill" data-filter="critical">Critical</button>
+                            <button class="fpill" data-filter="verified">Verified</button>
+                        </div>
+                    </div>
+                    <div class="metrics">
+                        <div class="mc">
+                            <div class="mc-label"><i class="ti ti-alert-circle"></i>Open</div>
+                            <div class="mc-val">3</div>
+                            <div class="mc-trend dn">+1 this week</div>
+                        </div>
+                        <div class="mc">
+                            <div class="mc-label"><i class="ti ti-clock"></i>Avg resolution</div>
+                            <div class="mc-val">4.2d</div>
+                            <div class="mc-trend up">↓ 1.1d faster</div>
+                        </div>
+                        <div class="mc">
+                            <div class="mc-label"><i class="ti ti-users"></i>Active citizens</div>
+                            <div class="mc-val">183</div>
+                            <div class="mc-trend up">↑ 22 this month</div>
+                        </div>
+                        <div class="mc">
+                            <div class="mc-label"><i class="ti ti-check"></i>Resolved (30d)</div>
+                            <div class="mc-val">31</div>
+                            <div class="mc-trend up">↑ 68% rate</div>
+                        </div>
+                    </div>
+                    <div class="issues" id="issues-list"></div>
+                </section>
+
+                <!-- Detail Panel -->
+                <aside class="detail-panel">
+                    <div class="dp-sec">
+                        <div class="dp-head"><span class="ai-chip"><i class="ti ti-sparkles"></i> AI</span> Selected
+                            issue</div>
+                        <div class="dp-title" id="dp-title">Select an issue</div>
+                        <div class="dp-cat" id="dp-cat">Click any issue card to see details</div>
+                        <div class="mini-map" id="mini-map">
+                            <div class="mm-label"><i class="ti ti-map-pin"></i> Ward 12</div>
+                        </div>
+                        <div style="margin-top:10px">
+                            <div class="pbar-row">
+                                <span style="font-size:12px">Community verification</span>
+                                <span style="font-size:12px;font-weight:500;color:var(--green)"
+                                    id="dp-verify-count">—</span>
+                            </div>
+                            <div class="pbar">
+                                <div class="pbar-fill" id="dp-pbar" style="width:0%"></div>
+                            </div>
+                            <div style="font-size:11px;color:var(--text-secondary)" id="dp-escalate"></div>
+                        </div>
+                    </div>
+                    <div class="dp-sec">
+                        <div class="dp-head"><i class="ti ti-list-check"></i> Timeline</div>
+                        <div class="tl" id="dp-timeline"></div>
+                    </div>
+                    <div class="dp-sec">
+                        <div class="dp-head"><i class="ti ti-brain"></i> AI predictions</div>
+                        <div class="pred-item">
+                            <div class="pred-icon" style="background:var(--amber-light);color:var(--amber-dark)"><i
+                                    class="ti ti-alert-triangle"></i></div>
+                            <div>
+                                <div class="pred-title">3 potholes expected this week</div>
+                                <div class="pred-sub">Rainfall + road age pattern</div>
+                            </div>
+                        </div>
+                        <div class="pred-item">
+                            <div class="pred-icon" style="background:var(--blue-light);color:var(--blue-dark)"><i
+                                    class="ti ti-droplet"></i></div>
+                            <div>
+                                <div class="pred-title">Drainage stress: Sector 3–5</div>
+                                <div class="pred-sub">Monsoon season risk: High</div>
+                            </div>
+                        </div>
+                        <div class="pred-item">
+                            <div class="pred-icon" style="background:var(--purple-light);color:var(--purple-dark)"><i
+                                    class="ti ti-bulb"></i></div>
+                            <div>
+                                <div class="pred-title">7 lights due maintenance</div>
+                                <div class="pred-sub">Last serviced 18+ months ago</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dp-sec">
+                        <div class="dp-head"><i class="ti ti-trophy"></i> Top contributors</div>
+                        <div id="mini-lb"></div>
+                    </div>
+                </aside>
+
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+       PAGE 2: MAP
+  ═══════════════════════════════════════ -->
+        <div id="page-map" class="page">
+            <div class="page-map">
+                <div class="map-canvas" id="mapCanvas"></div>
+                <div class="map-legend">
+                    <div class="leg-item">
+                        <div class="leg-dot" style="background:var(--red)"></div> Open
+                    </div>
+                    <div class="leg-item">
+                        <div class="leg-dot" style="background:var(--amber)"></div> In Progress
+                    </div>
+                    <div class="leg-item">
+                        <div class="leg-dot" style="background:var(--green)"></div> Resolved
+                    </div>
+                    <div class="leg-item">
+                        <div class="leg-dot" style="background:var(--purple)"></div> Critical
+                    </div>
+                </div>
+                <div class="map-stats">
+                    <div class="map-stat">
+                        <div class="ms-label">Issues mapped</div>
+                        <div class="ms-val">47</div>
+                        <div class="ms-sub">across Ward 12</div>
+                    </div>
+                    <div class="map-stat">
+                        <div class="ms-label">Hotspot zone</div>
+                        <div class="ms-val" style="color:var(--red)">Sector 3</div>
+                        <div class="ms-sub">8 active issues</div>
+                    </div>
+                    <div class="map-stat">
+                        <div class="ms-label">Cleanest zone</div>
+                        <div class="ms-val" style="color:var(--green)">Sector 7</div>
+                        <div class="ms-sub">All resolved</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+       PAGE 3: IMPACT
+  ═══════════════════════════════════════ -->
+        <div id="page-impact" class="page">
+            <div class="page-impact">
+                <div class="impact-metrics">
+                    <div class="im">
+                        <div class="im-icon" style="color:var(--green)"><i class="ti ti-check-circle"></i></div>
+                        <div class="im-val" style="color:var(--green)">68%</div>
+                        <div class="im-label">Resolution rate</div>
+                    </div>
+                    <div class="im">
+                        <div class="im-icon"><i class="ti ti-clock"></i></div>
+                        <div class="im-val">4.2d</div>
+                        <div class="im-label">Avg fix time</div>
+                    </div>
+                    <div class="im">
+                        <div class="im-icon"><i class="ti ti-users"></i></div>
+                        <div class="im-val">183</div>
+                        <div class="im-label">Active reporters</div>
+                    </div>
+                    <div class="im">
+                        <div class="im-icon" style="color:var(--amber)"><i class="ti ti-star"></i></div>
+                        <div class="im-val" style="color:var(--amber)">4.6</div>
+                        <div class="im-label">Citizen satisfaction</div>
+                    </div>
+                </div>
+                <div class="imp-grid">
+                    <div class="chart-card">
+                        <div class="chart-title">Issues by category</div>
+                        <div id="hbar-cat"></div>
+                    </div>
+                    <div class="chart-card">
+                        <div class="chart-title">Monthly resolution trend</div>
+                        <div id="spark-trend"></div>
+                    </div>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Weekly issue activity (last 8 weeks)</div>
+                    <div class="chart-legend-row">
+                        <span><span class="leg-sq" style="background:#E24B4A"></span>Reported</span>
+                        <span><span class="leg-sq" style="background:#1D9E75"></span>Resolved</span>
+                    </div>
+                    <div style="position:relative;height:200px"><canvas id="actChart"></canvas></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ═══════════════════════════════════════
+       PAGE 4: LEADERBOARD
+  ═══════════════════════════════════════ -->
+        <div id="page-lb" class="page">
+            <div class="page-lb">
+                <div class="lb-top" id="lb-top"></div>
+                <div class="full-lb">
+                    <div class="lb-header">
+                        <div></div>
+                        <div>Citizen</div>
+                        <div style="text-align:right">Issues</div>
+                        <div style="text-align:right">Verified</div>
+                        <div style="text-align:right">XP</div>
+                    </div>
+                    <div id="lb-rows"></div>
+                </div>
+            </div>
+        </div>
+
+    </div><!-- /shell -->
+
+    <!-- REPORT MODAL -->
+    <div class="modal-wrap" id="modal">
+        <div class="modal-bg" id="modal-bg"></div>
+        <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modal-step-title">
+            <div class="modal-head">
+                <h2 class="modal-title" id="modal-step-title">Report a community issue</h2>
+                <button class="btn icon-btn" id="modal-close-btn" aria-label="Close"><i class="ti ti-x"></i></button>
+            </div>
+            <div class="modal-body">
+                <!-- Step 1 -->
+                <div id="step1">
+                    <div class="field">
+                        <label for="r-title">What's the issue?</label>
+                        <input type="text" id="r-title" placeholder="e.g. Large pothole near market" />
+                    </div>
+                    <div class="ai-box" id="ai-box"><i class="ti ti-sparkles"></i>
+                        <div id="ai-text"></div>
+                    </div>
+                    <div class="field">
+                        <label for="r-cat">Category</label>
+                        <select id="r-cat">
+                            <option>Roads &amp; Potholes</option>
+                            <option>Water &amp; Drainage</option>
+                            <option>Street Lighting</option>
+                            <option>Waste Management</option>
+                            <option>Infrastructure</option>
+                            <option>Other</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="r-sev">Severity</label>
+                        <select id="r-sev">
+                            <option>Low</option>
+                            <option selected>Medium</option>
+                            <option>High</option>
+                            <option>Critical</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- Step 2 -->
+                <div id="step2" style="display:none">
+                    <div class="field">
+                        <label for="r-desc">Description</label>
+                        <textarea id="r-desc"
+                            placeholder="Where exactly? What's the impact? How long has it been there?"></textarea>
+                    </div>
+                    <div class="field">
+                        <label>Upload photo or video</label>
+                        <div class="upload-zone" id="upload-zone" tabindex="0" role="button"
+                            aria-label="Upload photo or video">
+                            <i class="ti ti-camera"></i><br />
+                            <span id="upload-label">Tap to add photo or video</span><br />
+                            <span class="upload-hint">AI will auto-categorize from your image</span>
+                        </div>
+                        <input type="file" id="file-input" accept="image/*,video/*" style="display:none" />
+                    </div>
+                    <div class="field">
+                        <label>Location</label>
+                        <div class="gps-row"><i class="ti ti-current-location" style="color:var(--green)"></i> GPS:
+                            Meerut, Ward 12 (auto-detected)</div>
+                    </div>
+                </div>
+                <!-- Step 3 -->
+                <div id="step3" style="display:none;text-align:center;padding:20px 0">
+                    <div class="success-circle"><i class="ti ti-check"></i></div>
+                    <div class="success-title">Issue reported!</div>
+                    <div class="success-sub">Your report has been submitted and AI-categorized.<br />The community can
+                        now verify it.</div>
+                    <div class="xp-earn-badge"><i class="ti ti-bolt"></i> +50 XP earned · Level up!</div>
+                </div>
+                <!-- Step dots -->
+                <div class="step-dots">
+                    <div class="sdot on" id="dot0"></div>
+                    <div class="sdot" id="dot1"></div>
+                    <div class="sdot" id="dot2"></div>
+                </div>
+            </div>
+            <div class="modal-foot">
+                <div class="xp-earn"><i class="ti ti-bolt"></i> Reporting earns +50 XP</div>
+                <div style="display:flex;gap:8px">
+                    <button class="btn" id="btn-back" style="display:none"><i class="ti ti-arrow-left"></i>
+                        Back</button>
+                    <button class="btn btn-green" id="btn-next">Next <i class="ti ti-arrow-right"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- TOAST -->
+    <div class="toast" id="toast">
+        <div class="toast-icon"><i class="ti ti-check" id="toast-icon"></i></div>
+        <span id="toast-msg">Done!</span>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>
